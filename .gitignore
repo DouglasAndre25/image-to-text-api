@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Upload images
+/tmp/uploads/**
+
+# trainedDatas
+eng.traineddata
