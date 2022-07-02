@@ -1,18 +1,25 @@
 const puppeteer = require("puppeteer");
 
+const languageMap = {
+  eng: "en",
+  por: "pt",
+};
+
 module.exports = async (text, { translateTo, originalLang }) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  const formattedText = text.replace(/\r?\n|\r/g, " ");
-  var url = `https://translate.google.com.br/?sl=${originalLang}&tl=${translateTo}&text=${encodeURIComponent(
-    formattedText
+  var url = `https://translate.google.com.br/?sl=${languageMap[originalLang]}
+  &tl=${languageMap[translateTo]}&text=${encodeURIComponent(
+    text
   )}&op=translate`;
+  console.log("url", url);
   await page.goto(url);
   await page.waitForTimeout(10000);
 
   const result = await page.evaluate(() => {
-    return document.getElementsByClassName("NqnNQd")[0].innerText;
+    const elements = Array.from(document.getElementsByClassName("NqnNQd"));
+    return elements.map((element) => element.innerText).join(" ");
   });
 
   browser.close();
