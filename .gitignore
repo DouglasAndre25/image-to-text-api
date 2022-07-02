@@ -105,6 +105,3 @@ dist
 
 # Upload images
 /tmp/uploads/**
-
-# trainedDatas
-eng.traineddata
