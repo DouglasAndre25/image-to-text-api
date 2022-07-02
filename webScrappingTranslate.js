@@ -19,7 +19,9 @@ module.exports = async (text, { translateTo, originalLang }) => {
 
   const result = await page.evaluate(() => {
     const elements = Array.from(document.getElementsByClassName("NqnNQd"));
-    return elements.map((element) => element.innerText).join(" ");
+    return elements
+      .map((element, index) => (index % 2 === 0 ? element.innerText : ""))
+      .join(" ");
   });
 
   browser.close();
