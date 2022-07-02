@@ -31,18 +31,16 @@ const upload = multer({
   }),
 });
 
-app.post("/translate", upload.single("file"), async (req, res) => {
-  const { body, file } = req;
-
-  console.log(file);
+app.post("/convert", upload.single("file"), async (req, res) => {
+  const { body, file, query } = req;
 
   const worker = createWorker({
     logger: (m) => console.log(m),
   });
 
   await worker.load();
-  await worker.loadLanguage("eng");
-  await worker.initialize("eng");
+  await worker.loadLanguage(query.lang);
+  await worker.initialize(query.lang);
 
   let translateImagePath = body.imageUrl ?? `${imagePath}\\${file.filename}`;
 
@@ -51,12 +49,18 @@ app.post("/translate", upload.single("file"), async (req, res) => {
   } = await worker.recognize(translateImagePath);
   await worker.terminate();
 
-  const translate = await webScrappingTranslate(originalText);
+  const response = {
+    originalText
+  }
 
-  return res.send({
-    originalText,
-    translate
-  });
+  if(query.translate) {
+    response.translate = await webScrappingTranslate(originalText, {
+      translateTo: query.translate,
+      originalLang: query.lang
+    });
+  }
+
+  return res.send(response);
 });
 
 app.listen(process.env.PORT, () => {
