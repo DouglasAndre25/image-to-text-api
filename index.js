@@ -63,6 +63,6 @@ app.post("/convert", upload.single("file"), async (req, res) => {
   return res.send(response);
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 8080, () => {
   console.log("Servidor em execução...");
 });
