@@ -7,12 +7,13 @@ const { createWorker } = require("tesseract.js");
 const multer = require("multer");
 const crypto = require("crypto");
 const webScrappingTranslate = require("./webScrappingTranslate");
-
+const timeout = require('connect-timeout')
 const imagePath = path.resolve(__dirname, "tmp", "uploads");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(timeout('45s'))
 app.use("/translate", express.static(imagePath));
 
 const upload = multer({
